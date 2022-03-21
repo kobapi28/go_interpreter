@@ -13,7 +13,16 @@ type Parser struct {
 	curToken  token.Token  // 現在のトークンを指し示す
 	peekToken token.Token  // 次のトークンを指し示す
 	errors    []string     // エラー
+	prefixParseFns map[token.TokenType]prefixParseFn // 前置構文解析関数
+	infixParseFns map[token.TokenType]infixParseFn // 中置構文解析関数
 }
+
+type (
+	prefixParseFn func() ast.Expression // 前置構文解析関数
+	// 中置構文解析関数
+	// ここでの引数はまた別の ast.Expression で中置演算子の左側
+	infixParseFn func(ast.Expression) ast.Expression 
+)
 
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{l: l, errors: []string{}}
@@ -127,4 +136,15 @@ func (p *Parser) Errors() []string {
 func (p *Parser) peekError(t token.TokenType) {
 	msg := fmt.Sprintf("expected next token to be %s, got %s instead", t, p.peekToken.Type)
 	p.errors = append(p.errors, msg)
+}
+
+
+// 前置構文解析関数のmapにエントリを追加する
+func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
+	p.prefixParseFns[tokenType] = fn
+}
+
+// 中置構文解析関数のmapにエントリを追加する
+func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
+	p.infixParseFns[tokenType] = fn
 }
