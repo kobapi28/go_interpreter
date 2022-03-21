@@ -31,7 +31,7 @@ func TestNextToken(t *testing.T) {
 
 	// 出てきてほしい結果を定義
 	tests := []struct {
-		expectedType token.TokenType
+		expectedType    token.TokenType
 		expectedLiteral string
 	}{
 		// 1行目

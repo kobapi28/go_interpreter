@@ -24,8 +24,8 @@ type Program struct {
 
 type LetStatement struct {
 	Token token.Token // token.LET トークン
-	Name *Identifier // 識別子を保持するため
-	Value Expression // 値を生成する式を保持するため
+	Name  *Identifier // 識別子を保持するため
+	Value Expression  // 値を生成する式を保持するため
 }
 
 // これらが Node, Statement インターフェースを満たす
@@ -33,7 +33,6 @@ func (ls *LetStatement) statementNode() {}
 func (ls *LetStatement) TokenLiteral() string {
 	return ls.Token.Literal
 }
-
 
 type Identifier struct {
 	Token token.Token // token.IDENT トークン

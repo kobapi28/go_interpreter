@@ -9,10 +9,10 @@ import (
 )
 
 type Parser struct {
-	l *lexer.Lexer // 字句解析器インスタンスへのポインタ
-	curToken token.Token // 現在のトークンを指し示す
-	peekToken token.Token // 次のトークンを指し示す
-	errors []string // エラー
+	l         *lexer.Lexer // 字句解析器インスタンスへのポインタ
+	curToken  token.Token  // 現在のトークンを指し示す
+	peekToken token.Token  // 次のトークンを指し示す
+	errors    []string     // エラー
 }
 
 func New(l *lexer.Lexer) *Parser {
@@ -71,7 +71,7 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 	stmt.Name = &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 
 	// 次のトークンが ASSIGN (イコール) を期待する
- 	if !p.expectPeek(token.ASSIGN) {
+	if !p.expectPeek(token.ASSIGN) {
 		return nil
 	}
 

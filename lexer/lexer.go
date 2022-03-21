@@ -3,10 +3,10 @@ package lexer
 import "github.com/shoma3571/go_interpreter/token"
 
 type Lexer struct {
-	input string
-	position int // 入力における現在の位置(現在の位置を指し示す)
-	readPosition int // これから読み込む位置(現在の文字の次)
-	ch byte // 現在検査中の文字
+	input        string
+	position     int  // 入力における現在の位置(現在の位置を指し示す)
+	readPosition int  // これから読み込む位置(現在の文字の次)
+	ch           byte // 現在検査中の文字
 }
 
 func New(input string) *Lexer {
@@ -31,7 +31,6 @@ func (l *Lexer) readChar() {
 	l.position = l.readPosition
 	l.readPosition += 1
 }
-
 
 // 現在検査中の文字 l.ch を見て、それに応じてトークンを返す
 // 返す前に入力のポインタを進めて、次に読んだ時に位置が更新されるようにする
@@ -88,7 +87,7 @@ func (l *Lexer) NextToken() token.Token {
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
-	default: 
+	default:
 		// 現在読んでいるものが英字(letter)かどうか
 		if isLetter(l.ch) {
 			// 英字であるなら、英字でないものが出てくるまで残りを読み進める
