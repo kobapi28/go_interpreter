@@ -57,7 +57,7 @@ func (l *lexer) NextToken() token.Token {
 		tok = newToken(token.MINUS, l.ch)
 	case '!':
 		if l.peekChar() == '=' {
-			// == の場合
+			// != の場合
 			ch := l.ch
 			l.readChar()
 			literal := string(ch) + string(l.ch)
