@@ -58,6 +58,18 @@ func (l *lexer) NextToken() token.Token {
 	case 0:
 		tok.Literal = ""
 		tok.Type = token.EOF
+	default: 
+		// 現在読んでいるものが英字(letter)かどうか
+		if isLetter(l.ch) {
+			// 英字であるなら、英字でないものが出てくるまで残りを読み進める
+			tok.Literal = l.readIdentifier()
+			// 返ってきた英文字列がキーワードかどうかを確認し、Typeに入れる
+			tok.Type = token.LookupIdent(tok.Literal)
+			// 早期の脱出が必要なのは、readIdentifierで現在の識別子の最後の文字を過ぎたところまで進んでいるから
+			return tok
+		} else {
+			tok = newToken(token.ILLEGAL, l.ch)
+		}
 	}
 
 	l.readChar()
@@ -67,4 +79,19 @@ func (l *lexer) NextToken() token.Token {
 // token初期化の役割を果たす
 func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
+}
+
+func (l *lexer) readIdentifier() string {
+	position := l.position
+	// 英字はひたすら読んで、positionを進める
+	for isLetter(l.ch) {
+		l.readChar()
+	}
+	// 読み初めから、終わりまでをスライスして返す
+	return l.input[position:l.position]
+}
+
+// 英字かどうかの判定
+func isLetter(ch byte) bool {
+	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
 }
