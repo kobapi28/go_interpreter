@@ -69,6 +69,10 @@ func (l *lexer) NextToken() token.Token {
 			tok.Type = token.LookupIdent(tok.Literal)
 			// 早期の脱出が必要なのは、readIdentifierで現在の識別子の最後の文字を過ぎたところまで進んでいるから
 			return tok
+		} else if isDigit(l.ch) {
+			tok.Type = token.INT
+			tok.Literal = l.readNumber()
+			return tok
 		} else {
 			tok = newToken(token.ILLEGAL, l.ch)
 		}
@@ -93,9 +97,22 @@ func (l *lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
+func (l *lexer) readNumber() string {
+	position := l.position
+	for isDigit(l.ch) {
+		l.readChar()
+	}
+	return l.input[position:l.position]
+}
+
 // 英字かどうかの判定
 func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+// 数字かどうかの判定
+func isDigit(ch byte) bool {
+	return '0' <= ch && ch <= '9'
 }
 
 // ホワイトスペースを読み飛ばす
