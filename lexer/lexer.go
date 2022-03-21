@@ -38,6 +38,8 @@ func (l *lexer) readChar() {
 func (l *lexer) NextToken() token.Token {
 	var tok token.Token
 
+	l.skipWhitespace()
+
 	switch l.ch {
 	case '=':
 		tok = newToken(token.ASSIGN, l.ch)
@@ -94,4 +96,11 @@ func (l *lexer) readIdentifier() string {
 // 英字かどうかの判定
 func isLetter(ch byte) bool {
 	return 'a' <= ch && ch <= 'z' || 'A' <= ch && ch <= 'Z' || ch == '_'
+}
+
+// ホワイトスペースを読み飛ばす
+func (l *lexer) skipWhitespace() {
+	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
+		l.readChar()
+	}
 }
