@@ -2,16 +2,16 @@ package lexer
 
 import "github.com/shoma3571/go_interpreter/token"
 
-type lexer struct {
+type Lexer struct {
 	input string
 	position int // 入力における現在の位置(現在の位置を指し示す)
 	readPosition int // これから読み込む位置(現在の文字の次)
 	ch byte // 現在検査中の文字
 }
 
-func New(input string) *lexer {
+func New(input string) *Lexer {
 	// inputのみを定義して、他はゼロ値で設定
-	l := &lexer{input: input}
+	l := &Lexer{input: input}
 	// とりあえず最初の文字を読んでおく
 	l.readChar()
 	return l
@@ -19,7 +19,7 @@ func New(input string) *lexer {
 
 // ポインタメソッド
 // 次の一文字を読んで、現在位置を進める
-func (l *lexer) readChar() {
+func (l *Lexer) readChar() {
 	// 次に読み込むものがあるかないかを判定
 	if l.readPosition >= len(l.input) {
 		// 終端に到達した場合 0 にする
@@ -35,7 +35,7 @@ func (l *lexer) readChar() {
 
 // 現在検査中の文字 l.ch を見て、それに応じてトークンを返す
 // 返す前に入力のポインタを進めて、次に読んだ時に位置が更新されるようにする
-func (l *lexer) NextToken() token.Token {
+func (l *Lexer) NextToken() token.Token {
 	var tok token.Token
 
 	l.skipWhitespace()
@@ -115,7 +115,7 @@ func newToken(tokenType token.TokenType, ch byte) token.Token {
 	return token.Token{Type: tokenType, Literal: string(ch)}
 }
 
-func (l *lexer) readIdentifier() string {
+func (l *Lexer) readIdentifier() string {
 	position := l.position
 	// 英字はひたすら読んで、positionを進める
 	for isLetter(l.ch) {
@@ -125,7 +125,7 @@ func (l *lexer) readIdentifier() string {
 	return l.input[position:l.position]
 }
 
-func (l *lexer) readNumber() string {
+func (l *Lexer) readNumber() string {
 	position := l.position
 	for isDigit(l.ch) {
 		l.readChar()
@@ -144,7 +144,7 @@ func isDigit(ch byte) bool {
 }
 
 // ホワイトスペースを読み飛ばす
-func (l *lexer) skipWhitespace() {
+func (l *Lexer) skipWhitespace() {
 	for l.ch == ' ' || l.ch == '\t' || l.ch == '\n' || l.ch == '\r' {
 		l.readChar()
 	}
@@ -152,7 +152,7 @@ func (l *lexer) skipWhitespace() {
 
 // 次の値を返す
 // 次の値を覗き見したいだけなので、readChar で進めることはしない
-func (l *lexer) peekChar() byte {
+func (l *Lexer) peekChar() byte {
 	if l.readPosition >= len(l.input) {
 		return 0
 	} else {
