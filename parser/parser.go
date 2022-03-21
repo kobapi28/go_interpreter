@@ -52,6 +52,8 @@ func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.LET:
 		return p.parseLetStatement()
+	case token.RETURN:
+		return p.parseReturnStatement()
 	default:
 		return nil
 	}
@@ -77,6 +79,20 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 
 	// TODO: セミコロンに遭遇するまで値を読み飛ばしてしまっている
 	// 後で実装する
+	for !p.curTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+
+	return stmt
+}
+
+func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
+	stmt := &ast.ReturnStatement{Token: p.curToken}
+
+	// 構文解析器を後続する式の位置へと移動させる
+	p.nextToken()
+
+	// TODO: セミコロンに遭遇するまで値を読み飛ばしてしまっている
 	for !p.curTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
