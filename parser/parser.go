@@ -24,8 +24,27 @@ type (
 	infixParseFn func(ast.Expression) ast.Expression 
 )
 
+const (
+	// 次に来る定数にインクリメントしながら数を与えるためにiotaを使った
+	// 数が大きい方が高い優先順位を持つようにしている
+	_ int = iota // 0
+	LOWEST  // 1
+	EQUALS // ==  2
+	LESSGREATER // > or <
+	SUM // +
+	PRODUCT // *
+	PREFIX // -x or !x
+	CALL // 関数呼び出し myFunction(x)
+)
+
 func New(l *lexer.Lexer) *Parser {
 	p := &Parser{l: l, errors: []string{}}
+
+	// prefixParseFnsマップの初期化
+	p.prefixParseFns = make(map[token.TokenType]prefixParseFn)
+	// 構文解析関数の登録
+	p.registerPrefix(token.IDENT, p.parseIdentifier)
+
 	// 2つトークンを読み込む。curToken, peekTokenの両方がセットされる
 	p.nextToken()
 	p.nextToken()
@@ -64,7 +83,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	case token.RETURN:
 		return p.parseReturnStatement()
 	default:
-		return nil
+		return p.parseExpressionStatement()
 	}
 }
 
@@ -109,6 +128,31 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 	return stmt
 }
 
+func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	// ExpressionStatement型のポインタ
+	stmt := &ast.ExpressionStatement{Token: p.curToken}
+
+	// Goの特徴として、このように代入ができる。
+	stmt.Expression = p.parseExpression(LOWEST)
+
+	if p.peekTokenIs(token.SEMICOLON) {
+		p.nextToken()
+	}
+	
+	// 返すのはポインタ
+	return stmt
+}
+
+// p.curToken.Type の前置に関連づけられた関数があるかを確認し、あれば呼び出して結果を返す
+func (p *Parser) parseExpression(precedence int) ast.Expression {
+	prefix := p.prefixParseFns[p.curToken.Type]
+	if prefix == nil {
+		return nil
+	}
+	leftExp := prefix()
+	return leftExp
+}
+
 func (p *Parser) curTokenIs(t token.TokenType) bool {
 	return p.curToken.Type == t
 }
@@ -147,4 +191,8 @@ func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {
 // 中置構文解析関数のmapにエントリを追加する
 func (p *Parser) registerInfix(tokenType token.TokenType, fn infixParseFn) {
 	p.infixParseFns[tokenType] = fn
+}
+
+func (p *Parser) parseIdentifier() ast.Expression {
+	return &ast.Identifier{Token: p.curToken, Value: p.curToken.Literal}
 }
