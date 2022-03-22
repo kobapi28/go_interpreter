@@ -46,6 +46,8 @@ func New(l *lexer.Lexer) *Parser {
 	// 構文解析関数の登録
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 	p.registerPrefix(token.INT, p.parseIntegerLiteral)
+	p.registerPrefix(token.BANG, p.parsePrefixExpression)
+	p.registerPrefix(token.MINUS, p.parsePrefixExpression)
 
 	// 2つトークンを読み込む。curToken, peekTokenの両方がセットされる
 	// 最初は curToken, peekToken の両方にセットされていない。
@@ -223,4 +225,19 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 
 	lit.Value = value
 	return lit
+}
+
+
+// この関数が呼ばれる時は token.BANK or token.MINUS
+// 正しく構文解析するために、複数のトークンが消費される必要があるため、nextTokenで進めている。
+func (p *Parser) parsePrefixExpression() ast.Expression {
+	expression := &ast.PrefixExpression{
+		Token: p.curToken,
+		Operator: p.curToken.Literal,
+	}
+
+	p.nextToken()
+	expression.Right = p.parseExpression(PREFIX)
+
+	return expression
 }
