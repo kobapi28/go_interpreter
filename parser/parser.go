@@ -99,6 +99,7 @@ func (p *Parser) parseLetStatement() *ast.LetStatement {
 
 	// 次のトークンが IDENT(変数名) を期待する。
 	// token.IDENT でなければ終了する
+	// expectPeek内で nextTokenをしているので、この関数内では進んでないように見えるけどちゃんと進んでる
 	if !p.expectPeek(token.IDENT) {
 		return nil
 	}
