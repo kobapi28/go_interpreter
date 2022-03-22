@@ -163,6 +163,7 @@ func (p *Parser) parseReturnStatement() *ast.ReturnStatement {
 }
 
 func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
+	defer untrace(trace("parseExpressionStatement"))
 	// ExpressionStatement型のポインタ
 	stmt := &ast.ExpressionStatement{Token: p.curToken}
 
@@ -179,6 +180,7 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 
 // p.curToken.Type の前置に関連づけられた関数があるかを確認し、あれば呼び出して結果を返す
 func (p *Parser) parseExpression(precedence int) ast.Expression {
+	defer untrace(trace("parseExpression"))
 	prefix := p.prefixParseFns[p.curToken.Type]
 	if prefix == nil {
 		p.noPrefixParseFnError(p.curToken.Type)
@@ -248,6 +250,7 @@ func (p *Parser) parseIdentifier() ast.Expression {
 }
 
 func (p *Parser) parseIntegerLiteral() ast.Expression {
+	defer untrace(trace("parseIntegerLiteral"))
 	lit := &ast.IntegerLiteral{Token: p.curToken}
 
 	value, err := strconv.ParseInt(p.curToken.Literal, 0, 64)
@@ -265,6 +268,7 @@ func (p *Parser) parseIntegerLiteral() ast.Expression {
 // この関数が呼ばれる時は token.BANK or token.MINUS
 // 正しく構文解析するために、複数のトークンが消費される必要があるため、nextTokenで進めている。
 func (p *Parser) parsePrefixExpression() ast.Expression {
+	defer untrace(trace("parsePrefixExpression"))
 	expression := &ast.PrefixExpression{
 		Token: p.curToken,
 		Operator: p.curToken.Literal,
@@ -295,6 +299,7 @@ func (p *Parser) curPrecedence() int {
 }
 
 func (p *Parser) parseInfixExpression(left ast.Expression) ast.Expression {
+	defer untrace(trace("parseInfixExpression"))
 	expression := &ast.InfixExpression{
 		Token: p.curToken,
 		Operator: p.curToken.Literal,
