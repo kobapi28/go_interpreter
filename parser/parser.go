@@ -237,6 +237,8 @@ func (p *Parser) parsePrefixExpression() ast.Expression {
 	}
 
 	p.nextToken()
+	// 1つ進めることで、その後の部分を構文解析しにいく。
+	// その結果を受け取って、Right に設定する
 	expression.Right = p.parseExpression(PREFIX)
 
 	return expression
