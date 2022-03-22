@@ -46,6 +46,9 @@ func New(l *lexer.Lexer) *Parser {
 	p.registerPrefix(token.IDENT, p.parseIdentifier)
 
 	// 2つトークンを読み込む。curToken, peekTokenの両方がセットされる
+	// 最初は curToken, peekToken の両方にセットされていない。
+	// 1回呼ぶと、 curToken はセットされていないが、 peekTokenには最初のTokenがセットされることになる
+	// もう一度呼ぶと、最初のTokenがcurTokenにセットされて、その次のTokenがpeekTokenにセットされるようになる
 	p.nextToken()
 	p.nextToken()
 
@@ -79,6 +82,8 @@ func (p *Parser) ParseProgram() *ast.Program {
 func (p *Parser) parseStatement() ast.Statement {
 	switch p.curToken.Type {
 	case token.LET:
+		// 返ってくるのは *ast.LetStatement なんだけど関数の戻り値は ast.Statement
+		// よしなに解釈してくれるって感じなのかな
 		return p.parseLetStatement()
 	case token.RETURN:
 		return p.parseReturnStatement()
@@ -87,6 +92,7 @@ func (p *Parser) parseStatement() ast.Statement {
 	}
 }
 
+// 返すのはポインタ
 func (p *Parser) parseLetStatement() *ast.LetStatement {
 	// 現在見ているトークン(token.LET)に基づいて、*ast.LetStatement ノードの構築
 	stmt := &ast.LetStatement{Token: p.curToken}
