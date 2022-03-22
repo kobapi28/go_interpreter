@@ -10,32 +10,32 @@ import (
 )
 
 type Parser struct {
-	l         *lexer.Lexer // 字句解析器インスタンスへのポインタ
-	curToken  token.Token  // 現在のトークンを指し示す
-	peekToken token.Token  // 次のトークンを指し示す
-	errors    []string     // エラー
+	l              *lexer.Lexer                      // 字句解析器インスタンスへのポインタ
+	curToken       token.Token                       // 現在のトークンを指し示す
+	peekToken      token.Token                       // 次のトークンを指し示す
+	errors         []string                          // エラー
 	prefixParseFns map[token.TokenType]prefixParseFn // 前置構文解析関数
-	infixParseFns map[token.TokenType]infixParseFn // 中置構文解析関数
+	infixParseFns  map[token.TokenType]infixParseFn  // 中置構文解析関数
 }
 
 type (
 	prefixParseFn func() ast.Expression // 前置構文解析関数
 	// 中置構文解析関数
 	// ここでの引数はまた別の ast.Expression で中置演算子の左側
-	infixParseFn func(ast.Expression) ast.Expression 
+	infixParseFn func(ast.Expression) ast.Expression
 )
 
 const (
 	// 次に来る定数にインクリメントしながら数を与えるためにiotaを使った
 	// 数が大きい方が高い優先順位を持つようにしている
-	_ int = iota // 0
-	LOWEST  // 1
-	EQUALS // ==  2
-	LESSGREATER // > or <
-	SUM // +
-	PRODUCT // *
-	PREFIX // -x or !x
-	CALL // 関数呼び出し myFunction(x)
+	_           int = iota // 0
+	LOWEST                 // 1
+	EQUALS                 // ==  2
+	LESSGREATER            // > or <
+	SUM                    // +
+	PRODUCT                // *
+	PREFIX                 // -x or !x
+	CALL                   // 関数呼び出し myFunction(x)
 )
 
 func New(l *lexer.Lexer) *Parser {
@@ -147,7 +147,7 @@ func (p *Parser) parseExpressionStatement() *ast.ExpressionStatement {
 	if p.peekTokenIs(token.SEMICOLON) {
 		p.nextToken()
 	}
-	
+
 	// 返すのはポインタ
 	return stmt
 }
@@ -190,7 +190,6 @@ func (p *Parser) peekError(t token.TokenType) {
 	msg := fmt.Sprintf("expected next token to be %s, got %s instead", t, p.peekToken.Type)
 	p.errors = append(p.errors, msg)
 }
-
 
 // 前置構文解析関数のmapにエントリを追加する
 func (p *Parser) registerPrefix(tokenType token.TokenType, fn prefixParseFn) {

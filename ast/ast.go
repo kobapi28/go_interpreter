@@ -9,7 +9,7 @@ import (
 // ASTの全てのノードはNodeインターフェースを実装する必要がある
 type Node interface {
 	TokenLiteral() string // そのノードが関連づけられているトークンのリテラル値を返す
-	String() string // デバッグのためなどに用いる
+	String() string       // デバッグのためなどに用いる
 }
 
 type Statement interface {
@@ -87,11 +87,11 @@ func (i *Identifier) String() string {
 }
 
 type ReturnStatement struct {
-	Token token.Token // token.RETURN
-	ReturnValue Expression // 値を生成する式を保持するため
+	Token       token.Token // token.RETURN
+	ReturnValue Expression  // 値を生成する式を保持するため
 }
 
-func (rs *ReturnStatement) statementNode(){}
+func (rs *ReturnStatement) statementNode() {}
 func (rs *ReturnStatement) TokenLiteral() string {
 	return rs.Token.Literal
 }
@@ -109,8 +109,8 @@ func (rs *ReturnStatement) String() string {
 
 // 式文
 type ExpressionStatement struct {
-	Token token.Token // 式の最初のトークン
-	Expression Expression // 式を保持する
+	Token      token.Token // 式の最初のトークン
+	Expression Expression  // 式を保持する
 }
 
 func (es *ExpressionStatement) statementNode() {}
@@ -127,7 +127,7 @@ func (es *ExpressionStatement) String() string {
 
 // 式なのでExpressionインターフェースを満たす
 type IntegerLiteral struct {
-	Token token.Token 
+	Token token.Token
 	Value int64
 }
 
