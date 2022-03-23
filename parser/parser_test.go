@@ -10,9 +10,9 @@ import (
 
 func TestLetStatements(t *testing.T) {
 	tests := []struct {
-		input string
+		input              string
 		expectedIdentifier string
-		expectedValue interface{}
+		expectedValue      interface{}
 	}{
 		{"let x = 5;", "x", 5},
 		{"let y = true;", "y", true},
@@ -68,7 +68,7 @@ func testLetStatement(t *testing.T, s ast.Statement, name string) bool {
 
 func TestReturnStatements(t *testing.T) {
 	tests := []struct {
-		input string
+		input               string
 		expectedReturnValue interface{}
 	}{
 		{"return 5;", 5},
@@ -137,7 +137,7 @@ func TestIdentifierExpression(t *testing.T) {
 
 func TestBooleanExpression(t *testing.T) {
 	tests := []struct {
-		input string
+		input           string
 		expectedBoolean bool
 	}{
 		{"true", true},
@@ -153,12 +153,12 @@ func TestBooleanExpression(t *testing.T) {
 		if len(program.Statements) != 1 {
 			t.Fatalf("program has not enough statements. got=%d", len(program.Statements))
 		}
-	
+
 		stmt, ok := program.Statements[0].(*ast.ExpressionStatement)
 		if !ok {
 			t.Fatalf("program.Statements[0] is not ast.ExpressionStatement. got=%T", program.Statements[0])
 		}
-	
+
 		boolean, ok := stmt.Expression.(*ast.Boolean)
 		if !ok {
 			t.Fatalf("exp not *ast.Boolean. got=%T", stmt.Expression)
@@ -167,7 +167,7 @@ func TestBooleanExpression(t *testing.T) {
 			t.Errorf("boolean.Value not %t. got=%t", tt.expectedBoolean,
 				boolean.Value)
 		}
-	}	
+	}
 }
 
 func TestIntegerLiteralExpression(t *testing.T) {
@@ -201,9 +201,9 @@ func TestIntegerLiteralExpression(t *testing.T) {
 // 前置演算子のためのテスト
 func TestParsingPrefixExpressions(t *testing.T) {
 	prefixTests := []struct {
-		input string
+		input    string
 		operator string
-		value interface{}
+		value    interface{}
 	}{
 		{"!5;", "!", 5},
 		{"-15;", "-", 15},
@@ -261,9 +261,9 @@ func testIntegerLiteral(t *testing.T, il ast.Expression, value int64) bool {
 
 func TestParsingInfixExpressions(t *testing.T) {
 	infixTests := []struct {
-		input string
-		leftValue interface{}
-		operator string
+		input      string
+		leftValue  interface{}
+		operator   string
 		rightValue interface{}
 	}{
 		{"5 + 5;", 5, "+", 5},
@@ -302,7 +302,7 @@ func TestParsingInfixExpressions(t *testing.T) {
 
 func TestOperatorPrecedenceParsing(t *testing.T) {
 	tests := []struct {
-		input string
+		input    string
 		expected string
 	}{
 		{
@@ -426,7 +426,6 @@ func checkParserErrors(t *testing.T, p *Parser) {
 	t.FailNow()
 }
 
-
 // helper
 func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 	ident, ok := exp.(*ast.Identifier)
@@ -450,7 +449,7 @@ func testIdentifier(t *testing.T, exp ast.Expression, value string) bool {
 
 func testLiteralExpression(t *testing.T, exp ast.Expression, expected interface{}) bool {
 	switch v := expected.(type) {
-	case int: 
+	case int:
 		return testIntegerLiteral(t, exp, int64(v))
 	case int64:
 		return testIntegerLiteral(t, exp, v)
@@ -484,7 +483,7 @@ func testInfixExpression(t *testing.T, exp ast.Expression, left interface{}, ope
 	}
 
 	return true
-} 
+}
 
 func testBooleanLiteral(t *testing.T, exp ast.Expression, value bool) bool {
 	bo, ok := exp.(*ast.Boolean)
@@ -651,7 +650,7 @@ func TestFunctionLiteralParsing(t *testing.T) {
 // パラメータのパースのテスト
 func TestFunctionParameterParsing(t *testing.T) {
 	tests := []struct {
-		input string
+		input          string
 		expectedParams []string
 	}{
 		{input: "fn() {};", expectedParams: []string{}},

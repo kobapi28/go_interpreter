@@ -142,9 +142,9 @@ func (il *IntegerLiteral) String() string {
 }
 
 type PrefixExpression struct {
-	Token token.Token // 前置トークン (!など)
+	Token    token.Token // 前置トークン (!など)
 	Operator string
-	Right Expression
+	Right    Expression
 }
 
 func (pe *PrefixExpression) expressionNode() {}
@@ -163,10 +163,10 @@ func (pe *PrefixExpression) String() string {
 }
 
 type InfixExpression struct {
-	Token token.Token // 演算子トークン (+など)
-	Left Expression
+	Token    token.Token // 演算子トークン (+など)
+	Left     Expression
 	Operator string
-	Right Expression
+	Right    Expression
 }
 
 func (ie *InfixExpression) expressionNode() {}
@@ -201,8 +201,8 @@ func (b *Boolean) String() string {
 }
 
 type IfExpression struct {
-	Token token.Token // if トークン
-	Condition Expression // 条件式
+	Token       token.Token     // if トークン
+	Condition   Expression      // 条件式
 	Consequence *BlockStatement // trueのとき
 	Alternative *BlockStatement // falseのとき
 }
@@ -229,7 +229,7 @@ func (ie *IfExpression) String() string {
 }
 
 type BlockStatement struct {
-	Token token.Token // { トークン
+	Token      token.Token // { トークン
 	Statements []Statement
 }
 
@@ -249,9 +249,9 @@ func (bs *BlockStatement) String() string {
 }
 
 type FunctionLiteral struct {
-	Token token.Token // fn トークン
+	Token      token.Token // fn トークン
 	Parameters []*Identifier
-	Body *BlockStatement
+	Body       *BlockStatement
 }
 
 func (fl *FunctionLiteral) expressionNode() {}
@@ -277,8 +277,8 @@ func (fl *FunctionLiteral) String() string {
 }
 
 type CallExpression struct {
-	Token token.Token // ( トークン
-	Function Expression // Identifier or FunctionLiteral
+	Token     token.Token // ( トークン
+	Function  Expression  // Identifier or FunctionLiteral
 	Arguments []Expression
 }
 
