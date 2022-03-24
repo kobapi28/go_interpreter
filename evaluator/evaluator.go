@@ -9,6 +9,7 @@ var (
 	// もともとインスタンスを作成しておき、その参照を返すようにする
 	TRUE = &object.Boolean{Value: true}
 	FALSE = &object.Boolean{Value: false}
+	NULL = &object.Null{}
 )
 
 func Eval(node ast.Node) object.Object {
