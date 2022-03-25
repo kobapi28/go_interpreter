@@ -6,6 +6,7 @@ import (
 
 	"github.com/shoma3571/go_interpreter/ast"
 	"github.com/shoma3571/go_interpreter/lexer"
+	"github.com/shoma3571/go_interpreter/parser"
 )
 
 func TestLetStatements(t *testing.T) {
@@ -21,7 +22,7 @@ func TestLetStatements(t *testing.T) {
 
 	for _, tt := range tests {
 		l := lexer.New(tt.input)
-		p := New(l)
+		p := parser.New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
 
@@ -78,7 +79,7 @@ func TestReturnStatements(t *testing.T) {
 
 	for _, tt := range tests {
 		l := lexer.New(tt.input)
-		p := New(l)
+		p := parser.New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
 
@@ -107,7 +108,7 @@ func TestIdentifierExpression(t *testing.T) {
 	input := "foobar;"
 
 	l := lexer.New(input)
-	p := New(l)
+	p := parser.New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
 
@@ -146,7 +147,7 @@ func TestBooleanExpression(t *testing.T) {
 
 	for _, tt := range tests {
 		l := lexer.New(tt.input)
-		p := New(l)
+		p := parser.New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
 
@@ -174,7 +175,7 @@ func TestIntegerLiteralExpression(t *testing.T) {
 	input := "5;"
 
 	l := lexer.New(input)
-	p := New(l)
+	p := parser.New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
 
@@ -213,7 +214,7 @@ func TestParsingPrefixExpressions(t *testing.T) {
 
 	for _, tt := range prefixTests {
 		l := lexer.New(tt.input)
-		p := New(l)
+		p := parser.New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
 
@@ -281,7 +282,7 @@ func TestParsingInfixExpressions(t *testing.T) {
 
 	for _, tt := range infixTests {
 		l := lexer.New(tt.input)
-		p := New(l)
+		p := parser.New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
 
@@ -401,7 +402,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 
 	for _, tt := range tests {
 		l := lexer.New(tt.input)
-		p := New(l)
+		p := parser.New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
 
@@ -413,7 +414,7 @@ func TestOperatorPrecedenceParsing(t *testing.T) {
 }
 
 // エラーをチェックし、エラーがあれば出力して停止する
-func checkParserErrors(t *testing.T, p *Parser) {
+func checkParserErrors(t *testing.T, p *parser.Parser) {
 	errors := p.Errors()
 	if len(errors) == 0 {
 		return
@@ -509,7 +510,7 @@ func TestIfExpression(t *testing.T) {
 	input := `if (x < y) { x }`
 
 	l := lexer.New(input)
-	p := New(l)
+	p := parser.New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
 
@@ -553,7 +554,7 @@ func TestIfElseExpression(t *testing.T) {
 	input := `if (x < y) { x } else { y }`
 
 	l := lexer.New(input)
-	p := New(l)
+	p := parser.New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
 
@@ -607,7 +608,7 @@ func TestFunctionLiteralParsing(t *testing.T) {
 	input := `fn(x, y) { x + y }`
 
 	l := lexer.New(input)
-	p := New(l)
+	p := parser.New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
 
@@ -660,7 +661,7 @@ func TestFunctionParameterParsing(t *testing.T) {
 
 	for _, tt := range tests {
 		l := lexer.New(tt.input)
-		p := New(l)
+		p := parser.New(l)
 		program := p.ParseProgram()
 		checkParserErrors(t, p)
 
@@ -681,7 +682,7 @@ func TestCallExpressionParsing(t *testing.T) {
 	input := "add(1, 2 * 3, 4 + 5);"
 
 	l := lexer.New(input)
-	p := New(l)
+	p := parser.New(l)
 	program := p.ParseProgram()
 	checkParserErrors(t, p)
 

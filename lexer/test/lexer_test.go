@@ -1,9 +1,10 @@
-package lexer
+package lexer_test
 
 import (
 	// golang標準パッケージ
 	"testing"
 
+	"github.com/shoma3571/go_interpreter/lexer"
 	"github.com/shoma3571/go_interpreter/token"
 )
 
@@ -120,7 +121,7 @@ func TestNextToken(t *testing.T) {
 		{token.EOF, ""},
 	}
 
-	l := New(input)
+	l := lexer.New(input)
 
 	// NextTokenで1つずつ進めながら、それが一致するかをテストする
 	for i, tt := range tests {
