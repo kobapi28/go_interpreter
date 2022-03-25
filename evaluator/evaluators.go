@@ -5,8 +5,6 @@ import (
 	"github.com/shoma3571/go_interpreter/object"
 )
 
-
-
 func evalProgram(program *ast.Program, env *object.Environment) object.Object {
 	var result object.Object
 
@@ -203,4 +201,3 @@ func unwrapReturnValue(obj object.Object) object.Object {
 
 	return obj
 }
-

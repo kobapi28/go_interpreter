@@ -2,7 +2,6 @@ package ast
 
 import "github.com/shoma3571/go_interpreter/token"
 
-
 type Boolean struct {
 	Token token.Token
 	Value bool

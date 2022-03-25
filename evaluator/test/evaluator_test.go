@@ -131,7 +131,7 @@ func TestBangOperator(t *testing.T) {
 
 func TestIfElseExpressions(t *testing.T) {
 	tests := []struct {
-		input string
+		input    string
 		expected interface{}
 	}{
 		{"if (true) { 10 }", 10},
@@ -165,7 +165,7 @@ func testNullObject(t *testing.T, obj object.Object) bool {
 
 func TestReturnStatements(t *testing.T) {
 	tests := []struct {
-		input string
+		input    string
 		expected int64
 	}{
 		{"return 10;", 10},
@@ -183,7 +183,7 @@ func TestReturnStatements(t *testing.T) {
 
 func TestErrorHandling(t *testing.T) {
 	tests := []struct {
-		input string
+		input           string
 		expectedMessage string
 	}{
 		{
@@ -243,8 +243,8 @@ func TestErrorHandling(t *testing.T) {
 }
 
 func TestLetStatements(t *testing.T) {
-	tests := []struct{
-		input string
+	tests := []struct {
+		input    string
 		expected int64
 	}{
 		{"let a = 5; a;", 5},
@@ -284,7 +284,7 @@ func TestFunctionObject(t *testing.T) {
 
 func TestFunctionApplication(t *testing.T) {
 	tests := []struct {
-		input string
+		input    string
 		expected int64
 	}{
 		{"let identity = fn(x) { x; }; identity(5);", 5},
