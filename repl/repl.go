@@ -7,6 +7,7 @@ import (
 
 	"github.com/shoma3571/go_interpreter/evaluator"
 	"github.com/shoma3571/go_interpreter/lexer"
+	"github.com/shoma3571/go_interpreter/object"
 	"github.com/shoma3571/go_interpreter/parser"
 )
 
@@ -29,6 +30,7 @@ const MONKEY_FACE = `            __,__
 // 字句解析器のインスタンスに渡し、最後に全てのトークンを表示する
 func Start(in io.Reader, out io.Writer) {
 	scanner := bufio.NewScanner(in)
+	env := object.NewEnvironment()
 
 	for {
 		fmt.Printf(PROMPT)
@@ -46,7 +48,7 @@ func Start(in io.Reader, out io.Writer) {
 			continue
 		}
 
-		evaluated := evaluator.Eval(program)
+		evaluated := evaluator.Eval(program, env)
 		if evaluated != nil {
 			io.WriteString(out, evaluated.Inspect())
 			io.WriteString(out, "\n")
